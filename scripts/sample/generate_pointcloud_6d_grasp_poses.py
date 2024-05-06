@@ -10,7 +10,7 @@ def parse_args():
     p.add('-c', '--config_filepath', required=False, is_config_file=True, help='Path to config file.')
 
     p.add_argument('--obj_id', type=int, default=0)
-    p.add_argument('--n_grasps', type=str, default='200')
+    p.add_argument('--n_grasps', type=int, default='200')
     p.add_argument('--obj_class', type=str, default='Laptop')
     p.add_argument('--device', type=str, default='cuda:0')
     p.add_argument('--eval_sim', type=bool, default=False)
@@ -23,7 +23,7 @@ def parse_args():
 
 def get_approximated_grasp_diffusion_field(p, args, device='cpu'):
     model_params = args.model
-    batch = 10
+    batch = args.n_grasps
     ## Load model
     model_args = {
         'device': device,
@@ -47,7 +47,10 @@ def sample_pointcloud(obj_id=0, obj_class='Mug'):
     P = mesh.sample(1000)
 
     sampled_rot = scipy.spatial.transform.Rotation.random()
-    rot = sampled_rot.as_matrix()
+    # rot = sampled_rot.as_matrix()
+
+    # use fixed rotation for reproducibility
+    rot = np.eye(3)
     rot_quat = sampled_rot.as_quat()
 
     P = np.einsum('mn,bn->bm', rot, P)
@@ -59,12 +62,11 @@ def sample_pointcloud(obj_id=0, obj_class='Mug'):
     H[:3,:3] = rot
     mesh.apply_transform(H)
     mesh.apply_scale(8.)
+    
     H = np.eye(4)
     H[:3,-1] = -P_mean
     mesh.apply_transform(H)
     translational_shift = copy.deepcopy(H)
-
-
 
     return P, mesh, translational_shift, rot_quat
 
@@ -108,6 +110,12 @@ if __name__ == '__main__':
 
     H = generator.sample()
 
+    # ========  save by pickle
+    import pickle
+    results = {'H': to_numpy(H), 'P': P, 'mesh': mesh, 'trans': trans}
+    with open('results.pkl', 'wb') as f:
+        pickle.dump(results, f)
+
     H_grasp = copy.deepcopy(H)
     # counteract the translational shift of the pointcloud (as the spawned model in simulation will still have it)
     H_grasp[:, :3, -1] = (H_grasp[:, :3, -1] - torch.as_tensor(trans[:3,-1],device=device)).float()
@@ -121,6 +129,7 @@ if __name__ == '__main__':
     P *=1/8
     mesh = mesh.apply_scale(1/8)
     grasp_visualization.visualize_grasps(to_numpy(H), p_cloud=P, mesh=mesh)
+
 
     if (EVAL_SIMULATION):
         ## Evaluate Grasps in Simulation##

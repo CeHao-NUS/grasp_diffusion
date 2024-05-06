@@ -6,6 +6,7 @@ import theseus as th
 from theseus import SO3
 from se3dif.utils import SO3_R3
 
+from se3dif.inpaint.base_inpaint import vanilla_inpatint, inpaint_opt
 
 class ApproximatedGrasp_AnnealedLD():
     def __init__(self, model, device='cpu', batch=10, dim =3,
@@ -173,10 +174,22 @@ class Grasp_AnnealedLD():
             trj_H = Ht[None,...]
         for t in range(self.T):
             Ht = self._step(Ht, t, noise_off=self.deterministic)
+
+            # apply inpainting
+            if t < self.T - 10:
+                # Ht = vanilla_inpatint(Ht)
+                Ht = inpaint_opt(Ht, threshold = 3e-3)
+
             if save_path:
                 trj_H = torch.cat((trj_H, Ht[None,:]), 0)
         for t in range(self.T_fit):
             Ht = self._step(Ht, self.T, noise_off=True)
+
+            # apply inpainting
+            if t < self.T_fit - 10:
+                # Ht = vanilla_inpatint(Ht)
+                Ht = inpaint_opt(Ht, threshold = 8e-3)
+
             if save_path:
                 trj_H = torch.cat((trj_H, Ht[None,:]), 0)
 
