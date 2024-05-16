@@ -74,18 +74,28 @@ class GraspDiffusionFields(nn.Module):
         self.feature_encoder = feature_encoder
         ## Decoder ##
         self.decoder = decoder
+        ## Condition ##
+        self.cond = None
 
-    def set_latent(self, O, batch = 1):
-        self.z = self.vision_encoder(O.squeeze(1))
-        self.z = self.z.unsqueeze(1).repeat(1, batch, 1).reshape(-1, self.z.shape[-1])
+    def set_latent(self, O, batch = 1): # observation 2, 100, 3
+        self.z = self.vision_encoder(O.squeeze(1))  # 2, 132
+        self.z = self.z.unsqueeze(1).repeat(1, batch, 1).reshape(-1, self.z.shape[-1]) # 2xbatch, 132
+
+    def set_condition(self, cond, batch = 1): # 
+        self.cond = cond # batch, 3
 
     def forward(self, H, k):
         ## 1. Represent H with points
-        p = self.geometry_encoder(H, self.points)
-        k_ext = k.unsqueeze(1).repeat(1, p.shape[1])
-        z_ext = self.z.unsqueeze(1).repeat(1, p.shape[1], 1)
+        p = self.geometry_encoder(H, self.points)  # 400, 30, 3  / self.points=(30, 3)  / H.shape=(400, 4, 4)
+        k_ext = k.unsqueeze(1).repeat(1, p.shape[1]) # 400, 30 (k.shape=(400))
+        z_ext = self.z.unsqueeze(1).repeat(1, p.shape[1], 1)  # 400, 30, 132  (self.z.shape=(400, 132))
+
+        if self.cond is not None:
+            cond_ext = self.cond.unsqueeze(1).repeat(1, p.shape[1], 1)
+        else:
+            cond_ext = None
         ## 2. Get Features
-        psi = self.feature_encoder(p, k_ext, z_ext)
+        psi = self.feature_encoder(p, k_ext, z_ext, cond_ext) # 400, 30, 7  [data, time, observation]
         ## 3. Flat and get energy
         psi_flatten = psi.reshape(psi.shape[0], -1)
         e = self.decoder(psi_flatten)
@@ -93,5 +103,10 @@ class GraspDiffusionFields(nn.Module):
 
     def compute_sdf(self, x):
         k = torch.rand_like(x[..., 0])
-        psi = self.feature_encoder(x, k, self.z)
+        if self.cond is not None:
+            cond = self.cond.view(-1, 3)
+        else:
+            cond = None            
+
+        psi = self.feature_encoder(x, k, self.z, cond)
         return psi[..., 0]

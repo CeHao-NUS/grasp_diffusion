@@ -18,6 +18,11 @@ class SDFLoss():
 
         ## Compute model output ##
         model.set_latent(c, batch=x_sdf.shape[1])
+
+        ## set condition ##
+        condition = x_sdf[..., :3]
+        model.set_condition(condition, batch=x_sdf.shape[1])
+
         sdf = model.compute_sdf(x_sdf.view(-1, 3))
 
         ## Reconstruction Loss ##

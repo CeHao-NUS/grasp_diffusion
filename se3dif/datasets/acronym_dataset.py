@@ -278,7 +278,7 @@ class PointcloudAcronymAndSDFDataset(Dataset):
                  n_pointcloud = 1000, n_density = 200, n_coords = 1000,
                  augmented_rotation=True, visualize=False, split = True):
 
-        #class_type = ['Mug']
+        class_type = ['Mug'] ## set single mug
         self.class_type = class_type
         self.data_dir = get_data_src()
 
@@ -294,14 +294,20 @@ class PointcloudAcronymAndSDFDataset(Dataset):
                 ## Grasp File ##
                 if g_obj.good_grasps.shape[0] > 0:
                     self.grasp_files.append(grasp_file)
+                    
 
         ## Split Train/Validation
         n = len(self.grasp_files)
         train_size = int(n*0.9)
         test_size  =  n - train_size
 
-        self.train_grasp_files, self.test_grasp_files = torch.utils.data.random_split(self.grasp_files, [train_size, test_size])
+        # === manual select one ======
+        self.grasp_files = self.grasp_files[:3]
+        train_size = 2
+        test_size = 1
 
+        self.train_grasp_files, self.test_grasp_files = torch.utils.data.random_split(self.grasp_files, [train_size, test_size])
+        
         self.type = 'train'
         self.len = len(self.train_grasp_files)
 
@@ -362,6 +368,7 @@ class PointcloudAcronymAndSDFDataset(Dataset):
         if self.one_object:
             index = 0
 
+        # print('yes here', index)
         ## Load Files ##
         if self.type == 'train':
             grasps_obj = AcronymGrasps(self.train_grasp_files[index])

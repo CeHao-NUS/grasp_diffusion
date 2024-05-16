@@ -23,7 +23,11 @@ class ProjectedSE3DenoisingLoss():
         H = model_input['x_ene_pos']
         c = model_input['visual_context']
         model.set_latent(c, batch=H.shape[1])
-        H = H.reshape(-1, 4, 4)
+        H = H.reshape(-1, 4, 4) # batch, 4, 4
+
+        # set condition
+        condition = H[..., :3, -1]
+        model.set_condition(condition, batch=H.shape[1])
 
         ## 1. H to vector ##
         H_th = SO3_R3(R=H[...,:3, :3], t=H[...,:3, -1])

@@ -39,7 +39,8 @@ class TimeLatentFeatureEncoder(nn.Module):
         xyz_in_all=None,
         use_tanh=False,
         latent_dropout=False,
-        feats_layers = None
+        feats_layers = None,
+        cond_dim = 0,
     ):
         super(TimeLatentFeatureEncoder, self).__init__()
 
@@ -61,7 +62,9 @@ class TimeLatentFeatureEncoder(nn.Module):
         def make_sequence():
             return []
 
-        dims = [latent_size + enc_dim + in_dim] + dims + [out_dim]
+        # change for condition
+        cond_dim = 132
+        dims = [latent_size + enc_dim + in_dim + cond_dim] + dims + [out_dim]
 
         self.num_layers = len(dims)
         self.norm_layers = norm_layers
@@ -112,7 +115,7 @@ class TimeLatentFeatureEncoder(nn.Module):
             self.feats_layers = feats_layers
 
     # input: N x (L+3)
-    def forward(self, input, timesteps, latent_vecs=None):
+    def forward(self, input, timesteps, latent_vecs=None, condition=None):
 
         ## Encode TimeStep
         t_emb = self.time_embed(timesteps)
@@ -120,11 +123,19 @@ class TimeLatentFeatureEncoder(nn.Module):
         x_emb = self.x_embed(input)
         xyz = x_emb + t_emb
 
+
         if (latent_vecs is not None):
             latent_vecs = F.dropout(latent_vecs, p=0.2, training=self.training)
-            x = torch.cat([latent_vecs, xyz, input], -1)
+            x = torch.cat([latent_vecs, xyz, input], -1) # 132 + 132 + 3 = 267
         else:
             x = torch.cat([xyz, input], -1)
+
+        # encode condition
+        if condition is not None: # 132
+            condition = self.x_embed(condition)
+            x = torch.cat([x, condition], -1)
+        
+
         x0 = x.clone()
 
         for layer in range(0, self.num_layers - 1):

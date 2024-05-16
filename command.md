@@ -40,3 +40,16 @@ python scripts/sample/generate_pointcloud_6d_grasp_poses.py --n_grasps 10 --obj_
 main: 
 sample: Grasp_AnnealedLD
 diff model: GraspDiffusionFields
+
+
+
+# =================== train new models ==========================
+python scripts/train/train_pointcloud_6d_grasp_diffusion.py 
+
+## change
+1. acronym_dataset.py / === manual select one ======
+2. grasp_dif.py / cond_ext
+3. sdf_loss.py / model.set_latent
+4. denoising_loss.py / model.set_latent
+5. feature_net.py / cond_dim = 132
+
