@@ -63,7 +63,7 @@ class TimeLatentFeatureEncoder(nn.Module):
             return []
 
         # change for condition
-        cond_dim = 132
+        # cond_dim = 132
         dims = [latent_size + enc_dim + in_dim + cond_dim] + dims + [out_dim]
 
         self.num_layers = len(dims)

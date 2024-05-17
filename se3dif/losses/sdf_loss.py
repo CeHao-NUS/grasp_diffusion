@@ -13,15 +13,15 @@ class SDFLoss():
         label = ground_truth[self.field].squeeze().reshape(-1)
 
         ## Set input ##
-        x_sdf = model_input['x_sdf'].detach().requires_grad_()
-        c = model_input['visual_context']
+        x_sdf = model_input['x_sdf'].detach().requires_grad_() # 2, 1000, 3
+        c = model_input['visual_context'] # 2, 1000, 3
 
         ## Compute model output ##
         model.set_latent(c, batch=x_sdf.shape[1])
 
-        ## set condition ##
-        condition = x_sdf[..., :3]
-        model.set_condition(condition, batch=x_sdf.shape[1])
+        # set zero-condition
+        cond = torch.zeros_like(x_sdf.view(-1, 3)).to(x_sdf.device) # batch, 3
+        # model.set_condition(cond)
 
         sdf = model.compute_sdf(x_sdf.view(-1, 3))
 

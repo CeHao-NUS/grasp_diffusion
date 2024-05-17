@@ -35,7 +35,7 @@ if __name__ == '__main__':
     mesh = mesh.apply_scale(1/8)
 
     # visualize results
-    # grasp_visualization.visualize_grasps(H, p_cloud=P, mesh=mesh)
+    grasp_visualization.visualize_grasps(H, p_cloud=P, mesh=mesh)
 
     '''
     visualize_grasps(Hs, scale=1., p_cloud=None, energies=None, colors=None, mesh=None, show=True):
@@ -52,8 +52,8 @@ if __name__ == '__main__':
     # H0[0:3,3] = 0
     # H0 = np.eye(4)
 
-    H0 = np.eye(4)
-    H1 = np.eye(4)
+    # H0 = np.eye(4)
+    # H1 = np.eye(4)
     # H1[:3,:3] = np.array([
     #     [1, 0, 0],
     #     [0, 0, 1],
@@ -61,19 +61,19 @@ if __name__ == '__main__':
     # ])
 
     # H1[1, -1]   = - 0.1
-    H1[2, -1]   = 0.1
+    # H1[2, -1]   = 0.1
 
-    H = np.array([H0, H1])
+    # H = np.array([H0, H1])
 
     # print(H0)
     # print(H1)
 
 
-    scene = grasp_visualization.visualize_grasps(H, p_cloud=P, mesh=mesh, show=False)
+    # scene = grasp_visualization.visualize_grasps(H, p_cloud=P, mesh=mesh, show=False)
 
-    scene.camera_transform = trans
+    # scene.camera_transform = trans
 
-    scene.show()
+    # scene.show()
 
 
     a = 1

@@ -34,6 +34,12 @@ def get_approximated_grasp_diffusion_field(p, args, device='cpu'):
     context = to_torch(p[None,...], device)
     model.set_latent(context, batch=batch)
 
+    #  ============ set condition if needed ============
+    from position_store import chosen_pos
+    # condition = chosen_pos[:3, -1]
+    # condition = np.repeat(condition[np.newaxis, ...], batch, axis=0)
+    # model.set_condition(to_torch(condition, device), batch=batch)
+
     ########### 2. SET SAMPLING METHOD #############
     generator = Grasp_AnnealedLD(model, batch=batch, T=70, T_fit=50, k_steps=2, device=device)
 

@@ -37,8 +37,9 @@ def parse_args():
                    , help='root for saving logging')
 
     p.add_argument('--device',  type=str, default='cuda',)
-    p.add_argument('--class_type', type=str, default='Mug')
+    p.add_argument('--class_type', type=str, default='')
 
+    p.add_argument('--exp_log_dir', type=str, default='')
     opt = p.parse_args()
     return opt
 
@@ -51,9 +52,13 @@ def main(opt):
 
     # saving directories
     root_dir = opt.saving_root
-    exp_dir  = os.path.join(root_dir, args['exp_log_dir'])
+    if opt.exp_log_dir == '':
+        exp_log_dir = args['exp_log_dir']
+    else:
+        exp_log_dir = opt.exp_log_dir
+    exp_dir  = os.path.join(root_dir, exp_log_dir)
     args['saving_folder'] = exp_dir
-
+    print('Saving folder: ', exp_dir)
 
     if opt.device =='cuda':
         if 'cuda_device' in args:
@@ -65,7 +70,8 @@ def main(opt):
         device = torch.device('cpu')
 
     ## Dataset
-    train_dataset = datasets.PointcloudAcronymAndSDFDataset(augmented_rotation=True, one_object=args['single_object'])
+    class_type = [opt.class_type]
+    train_dataset = datasets.PointcloudAcronymAndSDFDataset(class_type=class_type, augmented_rotation=True, one_object=args['single_object'])
     train_dataloader = DataLoader(train_dataset, batch_size=args['TrainSpecs']['batch_size'], shuffle=True, drop_last=True)
     test_dataset = copy.deepcopy(train_dataset)
     test_dataset.set_test_data()

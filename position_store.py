@@ -25,9 +25,9 @@ base = np.eye(4)
 
 head_pos = base
 
-# head_pos[0,-1] += -4 # head
+# head_pos[0,-1] += -2.0 # head
 
-# head_pos[1,-1] += 2 # handle
+# head_pos[1,-1] += 1 # handle
 
 # head_pos[2,-1] += -5
 

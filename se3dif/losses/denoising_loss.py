@@ -27,7 +27,7 @@ class ProjectedSE3DenoisingLoss():
 
         # set condition
         condition = H[..., :3, -1]
-        model.set_condition(condition, batch=H.shape[1])
+        # model.set_condition(condition, batch=H.shape[1])
 
         ## 1. H to vector ##
         H_th = SO3_R3(R=H[...,:3, :3], t=H[...,:3, -1])

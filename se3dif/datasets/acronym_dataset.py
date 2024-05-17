@@ -278,7 +278,7 @@ class PointcloudAcronymAndSDFDataset(Dataset):
                  n_pointcloud = 1000, n_density = 200, n_coords = 1000,
                  augmented_rotation=True, visualize=False, split = True):
 
-        class_type = ['Mug'] ## set single mug
+        # class_type = ['Bottle'] ## set single mug
         self.class_type = class_type
         self.data_dir = get_data_src()
 
@@ -302,7 +302,21 @@ class PointcloudAcronymAndSDFDataset(Dataset):
         test_size  =  n - train_size
 
         # === manual select one ======
-        self.grasp_files = self.grasp_files[:3]
+        if class_type[0] == 'Mug':
+            start_idx = 1
+
+        elif class_type[0] == 'Bottle':
+            start_idx = 3
+
+        elif class_type[0] == 'Hammer':
+            start_idx = 1
+
+        elif class_type[0] == 'Fork':
+            start_idx = 5
+
+        print('select obj ', class_type[0])
+
+        self.grasp_files = self.grasp_files[start_idx: start_idx+3]
         train_size = 2
         test_size = 1
 

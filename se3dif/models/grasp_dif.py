@@ -77,8 +77,8 @@ class GraspDiffusionFields(nn.Module):
         ## Condition ##
         self.cond = None
 
-    def set_latent(self, O, batch = 1): # observation 2, 100, 3
-        self.z = self.vision_encoder(O.squeeze(1))  # 2, 132
+    def set_latent(self, O, batch = 1): # observation 2, 1000, 3
+        self.z = self.vision_encoder(O.squeeze(1))  # 2, 132  / this encoder will make the dim1 to be None.
         self.z = self.z.unsqueeze(1).repeat(1, batch, 1).reshape(-1, self.z.shape[-1]) # 2xbatch, 132
 
     def set_condition(self, cond, batch = 1): # 
