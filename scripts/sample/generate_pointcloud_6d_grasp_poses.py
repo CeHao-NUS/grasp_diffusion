@@ -36,9 +36,43 @@ def get_approximated_grasp_diffusion_field(p, args, device='cpu'):
 
     #  ============ set condition if needed ============
     from position_store import chosen_pos
-    # condition = chosen_pos[:3, -1]
-    # condition = np.repeat(condition[np.newaxis, ...], batch, axis=0)
-    # model.set_condition(to_torch(condition, device), batch=batch)
+    condition = chosen_pos[:3, -1]
+    condition = np.repeat(condition[np.newaxis, ...], batch, axis=0)
+
+    # '''
+    # bottle
+    rand = np.random.normal(0, 0.2, condition.shape)
+    # condition += rand
+    condition[:, 0] += rand[:, 0]
+    condition[:, 1] += rand[:, 1]
+    # '''
+
+    '''
+    # hammer
+    # rand = np.random.normal(0, 0.1, condition.shape)
+    # condition[:, 0] += rand[:, 0]
+
+    # theta = np.random.uniform(0, 2*np.pi, batch)
+    # radius = 0.7
+    # y = radius * np.sin(theta)
+    # z = radius * np.cos(theta)
+
+    # condition[:, 1] += y
+    # condition[:, 2] += z
+    '''
+
+    '''
+    # fork
+    rand = np.random.normal(0, 0.2, condition.shape)
+    condition[:, 0] += rand[:, 0]
+    condition[:, 2] += rand[:, 2]
+
+    rand = np.random.uniform(-1, 1, condition.shape)
+    condition[:, 1] += rand[:, 1]
+    '''
+
+
+    model.set_condition(to_torch(condition, device), batch=batch)
 
     ########### 2. SET SAMPLING METHOD #############
     generator = Grasp_AnnealedLD(model, batch=batch, T=70, T_fit=50, k_steps=2, device=device)
@@ -49,6 +83,8 @@ def get_approximated_grasp_diffusion_field(p, args, device='cpu'):
 def sample_pointcloud(obj_id=0, obj_class='Mug'):
     acronym_grasps = AcronymGraspsDirectory(data_type=obj_class)
     mesh = acronym_grasps.avail_obj[obj_id].load_mesh()
+
+    print('obj name', acronym_grasps.avail_obj[obj_id])
 
     P = mesh.sample(1000)
 

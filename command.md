@@ -30,6 +30,10 @@ python scripts/sample/generate_pointcloud_6d_grasp_poses.py --n_grasps 10 --obj_
 python scripts/sample/generate_pointcloud_6d_grasp_poses.py --n_grasps 10 --obj_id 5 --obj_class Fork
 
 
+python scripts/sample/generate_pointcloud_6d_grasp_poses.py --n_grasps 10 --obj_id 1 --obj_class 'Mug' --model 'grasp_dif_mugs'
+
+
+
 # ============= hammer ==============
 python scripts/sample/generate_pointcloud_6d_grasp_poses.py --n_grasps 20 --obj_id 1 --obj_class 'Hammer' 
 
@@ -75,12 +79,27 @@ python scripts/sample/generate_pointcloud_6d_grasp_poses.py --n_grasps 10 --obj_
 
 
 
-python scripts/sample/generate_pointcloud_6d_grasp_poses.py --n_grasps 10 --obj_id 1 --obj_class 'Mug' --model 'grasp_mug'
+python scripts/sample/generate_pointcloud_6d_grasp_poses.py --n_grasps 4 --obj_id 1 --obj_class 'Mug' --model 'grasp_dif_mugs'
 
+python scripts/sample/generate_pointcloud_6d_grasp_poses.py --n_grasps 4 --obj_id 3 --obj_class 'Bottle' --model 'grasp_bottle'
 
-python scripts/sample/generate_pointcloud_6d_grasp_poses.py --n_grasps 20 --obj_id 3 --obj_class 'Bottle' --model 'grasp_bottle'
+python scripts/sample/generate_pointcloud_6d_grasp_poses.py --n_grasps 4 --obj_id 1 --obj_class 'Hammer' --model 'grasp_hammer'
 
-python scripts/sample/generate_pointcloud_6d_grasp_poses.py --n_grasps 20 --obj_id 1 --obj_class 'Hammer' --model 'grasp_hammer'
+python scripts/sample/generate_pointcloud_6d_grasp_poses.py --n_grasps 4 --obj_id 5 --obj_class 'Fork' --model 'grasp_fork'
 
-python scripts/sample/generate_pointcloud_6d_grasp_poses.py --n_grasps 10 --obj_id 5 --obj_class 'Fork' --model 'grasp_fork'
+//
+
+python scripts/sample/generate_pointcloud_6d_grasp_poses.py --n_grasps 4 --obj_id 1 --obj_class 'Hammer' --model 'grasp_dif_multi'
+
+python scripts/sample/generate_pointcloud_6d_grasp_poses.py --n_grasps 4 --obj_id 5 --obj_class 'Fork' --model 'grasp_dif_multi'
+
+=====
+python scripts/sample/generate_pointcloud_6d_grasp_poses.py --n_grasps 4 --obj_id 1 --obj_class 'Mug' --model 'grasp_mug_cond'
+
+python scripts/sample/generate_pointcloud_6d_grasp_poses.py --n_grasps 4 --obj_id 3 --obj_class 'Bottle' --model 'grasp_bottle_cond'
+
+python scripts/sample/generate_pointcloud_6d_grasp_poses.py --n_grasps 4 --obj_id 1 --obj_class 'Hammer' --model 'grasp_hammer_cond'
+
+python scripts/sample/generate_pointcloud_6d_grasp_poses.py --n_grasps 5 --obj_id 5 --obj_class 'Fork' --model 'grasp_fork_cond'
+
 

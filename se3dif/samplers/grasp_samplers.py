@@ -190,6 +190,7 @@ class Grasp_AnnealedLD():
             if inpaint:
                 if t < self.T_fit - 10:
                     # Ht = vanilla_inpatint(Ht)
+                    # Ht = inpaint_opt(Ht, threshold = 8e-3)
                     Ht = inpaint_opt(Ht, threshold = 8e-3)
 
             if save_path:
