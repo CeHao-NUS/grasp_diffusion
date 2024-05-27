@@ -155,20 +155,29 @@ if __name__ == '__main__':
     mesh = mesh.apply_scale(1/8)
     scene = grasp_visualization.visualize_grasps(to_numpy(H), p_cloud=P, mesh=None, show=args.show)
 
-    # save to numpy file
+
+    # save all
     import os
     if not os.path.exists(args.save_dir):
         os.makedirs(args.save_dir)
 
     pc_path = args.pc_path.split('/')[-1]
     pc_path = pc_path.split('.')[0]
-    file_name = 'save_pc_' + pc_path + '.npy'
+
+    import pickle
+    file_name = 'save_all_' + pc_path + '.npy'
+    save_dir = os.path.join(args.save_dir, file_name)
+    results = {'H': to_numpy(H), 'P': P, 'mesh': mesh, 'trans': trans}
+    with open(save_dir, 'wb') as f:
+        pickle.dump(results, f)
+
+    # save to numpy file
+    file_name = 'save_grasp' + pc_path + '.npy'
     save_dir = os.path.join(args.save_dir, file_name)
     np.save(save_dir, to_numpy(H))
 
     
     # save images
-
     from PIL import Image
     import io
     import matplotlib.pyplot as plt
