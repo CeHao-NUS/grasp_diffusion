@@ -161,7 +161,7 @@ class Grasp_AnnealedLD():
 
         return H1
 
-    def sample(self, save_path=False, batch=None, inpaint=True):
+    def sample(self, save_path=False, batch=None, inpaint=False):
 
         ## 1.Sample initial SE(3) ##
         if batch is None:

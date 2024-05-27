@@ -19,7 +19,8 @@ def parse_args():
     p.add_argument('--model', type=str, default='grasp_dif_multi')
     p.add_argument('--pc_path', type=str, default='')
     p.add_argument('--save_dir', type=str, default='')
-    p.add_argument('--cond', type=int, default=0)
+    p.add_argument('--cond', type=str, default='')
+
 
     opt = p.parse_args()
     return opt
@@ -52,15 +53,18 @@ def sample_pointcloud(obj_id=0, obj_class='Mug'):
 
 
     #  ==================== set chosen poses
-    from position_store import set_chosen_pose
-    import ast
-    cond_list = ast.literal_eval(args.cond)
 
-    pose = np.array(cond_list)
-    set_chosen_pose(pose) 
+    if args.cond:
+        from position_store import set_chosen_pose
+        import ast
+        cond_list = ast.literal_eval(args.cond)
 
-    from position_store import chosen_pose
-    print('chosen pose', chosen_pose)
+        pose = np.array(cond_list)
+        set_chosen_pose(pose) 
+
+
+        from position_store import chosen_pose
+        print('chosen pose', chosen_pose)
 
     # P = mesh.sample(1000)
     # read exernal point cloud
@@ -151,7 +155,9 @@ if __name__ == '__main__':
     grasp_visualization.visualize_grasps(to_numpy(H), p_cloud=P, mesh=None)
 
     # save to numpy file
-    np.save(args.save_dir, to_numpy(H))
+    import os
+    save_dir = os.path.join(args.save_dir, 'save_pc.npy')
+    np.save(save_dir, to_numpy(H))
 
 
     if (EVAL_SIMULATION):
