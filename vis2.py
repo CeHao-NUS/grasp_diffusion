@@ -41,9 +41,6 @@ if __name__ == '__main__':
     data = scene.save_image(resolution=(int(1080*1.5),1080))
     image = np.array(Image.open(io.BytesIO(data)))
 
-
-
-
     plt.imshow(image)
 
     # remove label number

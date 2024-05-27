@@ -1,10 +1,8 @@
 
-
-# define read point cloud path
-# define save path
-# define the conditions of the objects
-
-
+# 1. auto inpainting option
+# 2. save to numpy file, create dir
+# 3. save images
+# 4. auto change name of file
 
 
 def parse_args():
@@ -20,7 +18,8 @@ def parse_args():
     p.add_argument('--pc_path', type=str, default='')
     p.add_argument('--save_dir', type=str, default='')
     p.add_argument('--cond', type=str, default='')
-
+    p.add_argument('--inpaint', action='store_true')
+    p.add_argument('--show', action='store_true')
 
     opt = p.parse_args()
     return opt
@@ -53,8 +52,10 @@ def sample_pointcloud(obj_id=0, obj_class='Mug'):
 
 
     #  ==================== set chosen poses
+    from se3dif.inpaint.base_inpaint import set_inpainting
+    set_inpainting(args.inpaint)
 
-    if args.cond:
+    if args.inpaint and args.cond:
         from position_store import set_chosen_pose
         import ast
         cond_list = ast.literal_eval(args.cond)
@@ -152,12 +153,43 @@ if __name__ == '__main__':
     vis_H = H.squeeze()
     P *=1/8
     mesh = mesh.apply_scale(1/8)
-    grasp_visualization.visualize_grasps(to_numpy(H), p_cloud=P, mesh=None)
+    scene = grasp_visualization.visualize_grasps(to_numpy(H), p_cloud=P, mesh=None, show=args.show)
 
     # save to numpy file
     import os
-    save_dir = os.path.join(args.save_dir, 'save_pc.npy')
+    if not os.path.exists(args.save_dir):
+        os.makedirs(args.save_dir)
+
+    pc_path = args.pc_path.split('/')[-1]
+    pc_path = pc_path.split('.')[0]
+    file_name = 'save_pc_' + pc_path + '.npy'
+    save_dir = os.path.join(args.save_dir, file_name)
     np.save(save_dir, to_numpy(H))
+
+    
+    # save images
+
+    from PIL import Image
+    import io
+    import matplotlib.pyplot as plt
+
+    data = scene.save_image(resolution=(int(1080*1.5),1080))
+    image = np.array(Image.open(io.BytesIO(data)))
+
+    plt.imshow(image)
+
+    # remove label number
+    plt.xticks([])
+    plt.yticks([])
+    plt.axis('off')
+
+    # save
+    file_name = 'save_img_' + pc_path + '.png'
+    save_dir = os.path.join(args.save_dir, file_name)
+    plt.savefig(save_dir, dpi=300)
+
+    plt.close()
+
 
 
     if (EVAL_SIMULATION):

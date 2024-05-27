@@ -13,6 +13,12 @@ Hammar
 
 '''
 
+ENABLE_INPAINT = True
+
+def set_inpainting(inpaint):
+    global ENABLE_INPAINT
+    ENABLE_INPAINT = inpaint
+
 # from position_store import chosen_pose
 
 # H_patch = chosen_pose

@@ -142,6 +142,7 @@ def visualize_grasps(Hs, scale=1., p_cloud=None, energies=None, colors=None, mes
 
     if show:
         scene.show()
+        return scene
     else:
         return scene
 

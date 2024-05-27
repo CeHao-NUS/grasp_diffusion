@@ -161,7 +161,9 @@ class Grasp_AnnealedLD():
 
         return H1
 
-    def sample(self, save_path=False, batch=None, inpaint=False):
+    def sample(self, save_path=False, batch=None, inpaint=True):
+
+        from se3dif.inpaint.base_inpaint import ENABLE_INPAINT
 
         ## 1.Sample initial SE(3) ##
         if batch is None:
@@ -176,7 +178,7 @@ class Grasp_AnnealedLD():
             Ht = self._step(Ht, t, noise_off=self.deterministic)
 
             # apply inpainting
-            if inpaint:
+            if inpaint and ENABLE_INPAINT:
                 if t < self.T - 10:
                     from position_store import chosen_pose
                     # Ht = vanilla_inpatint(Ht, chosen_pose)
@@ -188,7 +190,7 @@ class Grasp_AnnealedLD():
             Ht = self._step(Ht, self.T, noise_off=True)
 
             # apply inpainting
-            if inpaint:
+            if inpaint and ENABLE_INPAINT:
                 if t < self.T_fit - 10:
                     from position_store import chosen_pose
                     # Ht = vanilla_inpatint(Ht, chosen_pose)
