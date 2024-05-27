@@ -13,9 +13,9 @@ Hammar
 
 '''
 
-from position_store import chosen_pos
+# from position_store import chosen_pose
 
-H_patch = chosen_pos
+# H_patch = chosen_pose
 
 H_mask = np.array([
         [0,0,0,1],
@@ -24,7 +24,7 @@ H_mask = np.array([
         [0,0,0,0]])
 
 
-def vanilla_inpatint(x_in):
+def vanilla_inpatint(x_in, H_patch):
     
     x_numpy = x_in.cpu().detach().numpy()
 
@@ -44,7 +44,7 @@ def vanilla_inpatint(x_in):
     return x_out
 
 
-def inpaint_opt(x_in, threshold = 3e-3):
+def inpaint_opt(x_in, H_patch, threshold = 3e-3):
     x_numpy = x_in.cpu().detach().numpy()
     num_non_zero = np.sum(H_mask)
 

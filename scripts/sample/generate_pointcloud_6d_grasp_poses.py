@@ -15,7 +15,8 @@ def parse_args():
     p.add_argument('--device', type=str, default='cuda:0')
     p.add_argument('--eval_sim', type=bool, default=False)
     p.add_argument('--model', type=str, default='grasp_dif_multi')
-
+    p.add_argument('--idx', type=int, default=0)
+    p.add_argument('--save_dir', type=str, default='results.pkl')
 
     opt = p.parse_args()
     return opt
@@ -35,17 +36,15 @@ def get_approximated_grasp_diffusion_field(p, args, device='cpu'):
     model.set_latent(context, batch=batch)
 
     #  ============ set condition if needed ============
-    from position_store import chosen_pos
-    condition = chosen_pos[:3, -1]
-    condition = np.repeat(condition[np.newaxis, ...], batch, axis=0)
+    
 
-    # '''
+    '''
     # bottle
     rand = np.random.normal(0, 0.2, condition.shape)
     # condition += rand
     condition[:, 0] += rand[:, 0]
     condition[:, 1] += rand[:, 1]
-    # '''
+    '''
 
     '''
     # hammer
@@ -70,6 +69,14 @@ def get_approximated_grasp_diffusion_field(p, args, device='cpu'):
     rand = np.random.uniform(-1, 1, condition.shape)
     condition[:, 1] += rand[:, 1]
     '''
+
+    from position_store import init_pose
+
+    condition = []
+    for i in range(batch):
+        chosen_pose = init_pose(args.obj_class, args.idx)
+        condition.append(chosen_pose[:3, -1])
+
 
 
     model.set_condition(to_torch(condition, device), batch=batch)
@@ -146,6 +153,16 @@ if __name__ == '__main__':
     n_envs = 30
     device = args.device
 
+    # initialize the cond
+    from position_store import init_pose
+    init_pose(obj_class, args.idx)
+
+    from position_store import chosen_pose
+    print('chosen_pose')
+    print(chosen_pose)
+
+
+
     ## Set Model and Sample Generator ##
     P, mesh, trans, rot_quad = sample_pointcloud(obj_id, obj_class)
     generator, model = get_approximated_grasp_diffusion_field(P, args, device)
@@ -155,7 +172,7 @@ if __name__ == '__main__':
     # ========  save by pickle
     import pickle
     results = {'H': to_numpy(H), 'P': P, 'mesh': mesh, 'trans': trans}
-    with open('results.pkl', 'wb') as f:
+    with open(args.save_dir, 'wb') as f:
         pickle.dump(results, f)
 
     H_grasp = copy.deepcopy(H)
