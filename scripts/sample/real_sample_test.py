@@ -156,7 +156,7 @@ if __name__ == '__main__':
     scene = grasp_visualization.visualize_grasps(to_numpy(H), p_cloud=P, mesh=None, show=args.show)
 
 
-    # save all
+    # ================= save all
     import os
     if not os.path.exists(args.save_dir):
         os.makedirs(args.save_dir)
@@ -171,13 +171,14 @@ if __name__ == '__main__':
     with open(save_dir, 'wb') as f:
         pickle.dump(results, f)
 
-    # save to numpy file
+
+    # ============== save grasps to numpy file
     file_name = 'save_grasp' + pc_path + '.npy'
     save_dir = os.path.join(args.save_dir, file_name)
     np.save(save_dir, to_numpy(H))
 
     
-    # save images
+    # ============ save images
     from PIL import Image
     import io
     import matplotlib.pyplot as plt
