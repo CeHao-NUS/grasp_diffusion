@@ -103,3 +103,8 @@ python scripts/sample/generate_pointcloud_6d_grasp_poses.py --n_grasps 4 --obj_i
 python scripts/sample/generate_pointcloud_6d_grasp_poses.py --n_grasps 5 --obj_id 5 --obj_class 'Fork' --model 'grasp_fork_cond'
 
 
+# ================= real
+
+python scripts/sample/real_sample_test.py --n_grasps 10 --obj_id 1 --obj_class 'Mug' --model 'grasp_dif_mugs'
+
+python scripts/sample/real_sample_test.py --n_grasps 10 --obj_id 3 --obj_class 'Bottle' --model 'grasp_dif_multi'

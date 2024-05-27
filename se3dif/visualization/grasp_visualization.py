@@ -134,8 +134,8 @@ def visualize_grasps(Hs, scale=1., p_cloud=None, energies=None, colors=None, mes
     ## Visualize grips and the object
     if mesh is not None:
         scene = trimesh.Scene([mesh]+ grips)
-    elif p_cloud is not None:
-        p_cloud_tri = trimesh.points.PointCloud(p_cloud)
+    elif p_cloud is not None: # color to be red
+        p_cloud_tri = trimesh.points.PointCloud(p_cloud, colors=[[255,0,0,255] for _ in range(p_cloud.shape[0])])
         scene = trimesh.Scene([p_cloud_tri]+ grips)
     else:
         scene = trimesh.Scene(grips)

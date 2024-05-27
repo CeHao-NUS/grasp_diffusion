@@ -83,6 +83,9 @@ cond_inpt = {
     ],
 }
 
+
+
+
 chosen_pose = np.eye(4)
 
 def move(bias, rand, radius):
@@ -133,3 +136,6 @@ def init_pose(obs_class, idx=0):
 
     return chosen_pose
 
+def set_chosen_pose(x0): #[0. , 0. , 0.]
+    global chosen_pose
+    chosen_pose = translate(x0)

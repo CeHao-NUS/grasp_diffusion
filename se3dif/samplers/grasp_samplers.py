@@ -161,7 +161,7 @@ class Grasp_AnnealedLD():
 
         return H1
 
-    def sample(self, save_path=False, batch=None, inpaint=False):
+    def sample(self, save_path=False, batch=None, inpaint=True):
 
         ## 1.Sample initial SE(3) ##
         if batch is None:
@@ -179,8 +179,8 @@ class Grasp_AnnealedLD():
             if inpaint:
                 if t < self.T - 10:
                     from position_store import chosen_pose
-                    Ht = vanilla_inpatint(Ht, chosen_pose)
-                    # Ht = inpaint_opt(Ht, chosen_pose, threshold = 3e-3)
+                    # Ht = vanilla_inpatint(Ht, chosen_pose)
+                    Ht = inpaint_opt(Ht, chosen_pose, threshold = 3e-3)
 
             if save_path:
                 trj_H = torch.cat((trj_H, Ht[None,:]), 0)
@@ -191,8 +191,8 @@ class Grasp_AnnealedLD():
             if inpaint:
                 if t < self.T_fit - 10:
                     from position_store import chosen_pose
-                    Ht = vanilla_inpatint(Ht, chosen_pose)
-                    # Ht = inpaint_opt(Ht, chosen_pose, threshold = 8e-3)
+                    # Ht = vanilla_inpatint(Ht, chosen_pose)
+                    Ht = inpaint_opt(Ht, chosen_pose, threshold = 8e-3)
                     # Ht = inpaint_opt(Ht, chosen_pose, threshold = 1e-4)
 
             if save_path:
