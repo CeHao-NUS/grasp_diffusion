@@ -174,9 +174,18 @@ if __name__ == '__main__':
 
 
     # ============== save grasps to numpy file
-    file_name = 'save_grasp' + pc_path + '.npy'
+    file_name = 'save_grasp_' + pc_path + '.npy'
     save_dir = os.path.join(args.save_dir, file_name)
-    np.save(save_dir, to_numpy(H))
+
+    # !!! apply a transformation to the grasp
+    dist = torch.tensor([0, 0, 1.12169998e-01]).to(device)
+    trans_grasps = copy.deepcopy(H_grasp)
+    for i in range(len(H_grasp)):
+        H_i = H_grasp[i]
+        dist_trans = torch.matmul(H_i[:3, :3], dist)
+        trans_grasps[i, :3, -1] += dist
+
+    np.save(save_dir, to_numpy(trans_grasps)) # use unnormalized
 
     
     # ============ save images

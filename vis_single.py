@@ -55,6 +55,6 @@ def vis_every_grasp(file_name, image_dir):
         
     
 if __name__ == '__main__':
-    file_name = '../temp_save/save_all_bottle_test_pc.npy'
+    file_name = '../temp_save/save_all_scene_bottle_pc.npy'
     image_dir = '../temp_save/image_dir'
     vis_every_grasp(file_name, image_dir)
