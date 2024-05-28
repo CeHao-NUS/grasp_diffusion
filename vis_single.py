@@ -11,7 +11,7 @@ import pickle
 
 
 def show_image(H, P, save_dir):
-    scene = grasp_visualization.visualize_grasps(H, p_cloud=P, mesh=None, show=False)
+    scene = grasp_visualization.visualize_grasps(H, p_cloud=P, mesh=None, show=True)
 
     # scene.show()
 
@@ -48,6 +48,13 @@ def vis_every_grasp(file_name, image_dir):
         hi = hi[np.newaxis, ...]
         file_name = 'grasp_' + str(i) + '.png'
         save_dir = os.path.join(image_dir, file_name)
+
+        print("="*20)
+        print('idx:', i, hi)
         show_image(hi, P, save_dir)
         
     
+if __name__ == '__main__':
+    file_name = '../temp_save/save_all_scene_bottle_pc.npy'
+    image_dir = '../temp_save/image_dir'
+    vis_every_grasp(file_name, image_dir)
