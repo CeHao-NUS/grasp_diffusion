@@ -125,8 +125,9 @@ if __name__ == '__main__':
 
 
     print('##########################################################')
-    print('Object Class: {}'.format(args.obj_class))
-    print(args.obj_id)
+    # print('Object Class: {}'.format(args.obj_class))
+    # print(args.obj_id)
+    print('file', args.pc_path)
     print('##########################################################')
 
     n_grasps = int(args.n_grasps)
