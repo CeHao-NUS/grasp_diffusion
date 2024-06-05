@@ -163,7 +163,7 @@ class Grasp_AnnealedLD():
 
     def sample(self, save_path=False, batch=None, inpaint=True):
 
-        from se3dif.inpaint.base_inpaint import ENABLE_INPAINT
+        from se3dif.inpaint.base_inpaint import ENABLE_INPAINT, METHOD
 
         ## 1.Sample initial SE(3) ##
         if batch is None:
@@ -181,8 +181,10 @@ class Grasp_AnnealedLD():
             if inpaint and ENABLE_INPAINT:
                 if t < self.T - 10:
                     from position_store import chosen_pose
-                    # Ht = vanilla_inpatint(Ht, chosen_pose)
-                    Ht = inpaint_opt(Ht, chosen_pose, threshold = 3e-3)
+                    if METHOD == 'vanilla':
+                        Ht = vanilla_inpatint(Ht, chosen_pose)
+                    elif METHOD == 'opt':
+                        Ht = inpaint_opt(Ht, chosen_pose, threshold = 3e-3)
 
             if save_path:
                 trj_H = torch.cat((trj_H, Ht[None,:]), 0)
@@ -193,9 +195,10 @@ class Grasp_AnnealedLD():
             if inpaint and ENABLE_INPAINT:
                 if t < self.T_fit - 10:
                     from position_store import chosen_pose
-                    # Ht = vanilla_inpatint(Ht, chosen_pose)
-                    Ht = inpaint_opt(Ht, chosen_pose, threshold = 8e-3)
-                    # Ht = inpaint_opt(Ht, chosen_pose, threshold = 1e-4)
+                    if METHOD == 'vanilla':
+                        Ht = vanilla_inpatint(Ht, chosen_pose)
+                    elif METHOD == 'opt':
+                        Ht = inpaint_opt(Ht, chosen_pose, threshold = 8e-3)
 
             if save_path:
                 trj_H = torch.cat((trj_H, Ht[None,:]), 0)

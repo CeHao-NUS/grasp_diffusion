@@ -16,14 +16,46 @@ scene_mug_pc
 
 
 
-python vis_single.py
-
-
-
-
 python scripts/sample/real_sample_test.py --n_grasps 10 --obj_id 1 --obj_class 'Mug' --model 'grasp_dif_multi' --pc_path '/home/crslab/kelvin/hc_pc/test_fork_handle_pc.npy' --save_dir '/home/crslab/kelvin/hc_pc/' --show  --cond "[0 , 1, 0.4]" --inpaint 
 
 
-
-
 python scripts/sample/real_sample_test.py --n_grasps 10 --obj_id 1 --obj_class 'Mug' --model 'grasp_dif_mugs' --pc_path '/home/crslab/kelvin/hc_pc/test_bottle_pc.npy' --save_dir '/home/crslab/kelvin/hc_pc/' --show  --cond "[0 , 0, 1]" --inpaint 
+
+
+# example
+
+# =============== for inpainting
+## inpainting opt is our method
+
+python scripts/sample/real_sample_test.py --n_grasps 10  --model 'grasp_dif_multi' \
+--pc_path '../scene_data/scene_bottle_pc.npy' --save_dir '../temp_save/' --show --method 'opt'\
+ --cond "[0. , 2., 0.]" --inpaint 
+
+
+## inpainting vanilla is our baseline
+
+python scripts/sample/real_sample_test.py --n_grasps 10  --model 'grasp_dif_multi' \
+--pc_path '../scene_data/scene_bottle_pc.npy' --save_dir '../temp_save/' --show --method 'vanilla'\
+ --cond "[0. , 2., 0.]" --inpaint 
+
+
+# ============== goal condition
+## need to use fine-tuned model for each method
+## must have condition
+in feature_net.py, open 'cond_dim = 132'
+
+models: 
+grasp_mug_cond
+grasp_bottle_cond
+grasp_hammer_cond
+grasp_fork_cond
+
+
+python scripts/sample/real_sample_test.py --n_grasps 10  --model 'grasp_bottle_cond' \
+--pc_path '../scene_data/scene_bottle_pc.npy' --save_dir '../temp_save/' --show --method 'goal'\
+ --cond "[0. , 1.0, 0.]" 
+
+
+
+
+

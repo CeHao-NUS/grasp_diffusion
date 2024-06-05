@@ -14,10 +14,15 @@ Hammar
 '''
 
 ENABLE_INPAINT = True
+METHOD = 'opt'
 
 def set_inpainting(inpaint):
     global ENABLE_INPAINT
     ENABLE_INPAINT = inpaint
+
+def set_method(method):
+    global METHOD
+    METHOD = method
 
 # from position_store import chosen_pose
 

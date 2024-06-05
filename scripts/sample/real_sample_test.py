@@ -21,6 +21,8 @@ def parse_args():
     p.add_argument('--inpaint', action='store_true')
     p.add_argument('--show', action='store_true')
 
+    p.add_argument('--method', choices=['vanilla', 'opt', 'goal'], default='opt')
+
     opt = p.parse_args()
     return opt
 
@@ -38,22 +40,27 @@ def get_approximated_grasp_diffusion_field(p, args, device='cpu'):
     context = to_torch(p[None,...], device)
     model.set_latent(context, batch=batch)
 
+    if args.method == 'goal':
+        import ast
+        cond_list = ast.literal_eval(args.cond)
+        pose = np.array(cond_list)
+
+        condition = np.tile(pose, (batch, 1))
+        model.set_condition(to_torch(condition, device), batch=batch)
+
+
     ########### 2. SET SAMPLING METHOD #############
     generator = Grasp_AnnealedLD(model, batch=batch, T=70, T_fit=50, k_steps=2, device=device)
 
     return generator, model
 
 
-def sample_pointcloud(obj_id=0, obj_class='Mug'):
-    acronym_grasps = AcronymGraspsDirectory(data_type=obj_class)
-    mesh = acronym_grasps.avail_obj[obj_id].load_mesh()
-
-    print('obj name', acronym_grasps.avail_obj[obj_id])
-
+def sample_pointcloud(args, obj_id=0, obj_class='Mug'):
 
     #  ==================== set chosen poses
-    from se3dif.inpaint.base_inpaint import set_inpainting
+    from se3dif.inpaint.base_inpaint import set_inpainting, set_method
     set_inpainting(args.inpaint)
+    set_method(args.method)
 
     if args.inpaint and args.cond:
         from position_store import set_chosen_pose
@@ -67,9 +74,7 @@ def sample_pointcloud(obj_id=0, obj_class='Mug'):
         from position_store import chosen_pose
         print('chosen pose', chosen_pose)
 
-    # P = mesh.sample(1000)
-    # read exernal point cloud
-    # file_path = '/home/zihao/cehao/github_space/data/scene_data/scene_bottle_pc.npy'
+
     file_path = args.pc_path
     P = np.load(file_path)
 
@@ -77,7 +82,6 @@ def sample_pointcloud(obj_id=0, obj_class='Mug'):
     P = P[random_indices, :3]
 
     sampled_rot = scipy.spatial.transform.Rotation.random()
-    # rot = sampled_rot.as_matrix()
 
     # use fixed rotation for reproducibility
     rot = np.eye(3)
@@ -89,16 +93,11 @@ def sample_pointcloud(obj_id=0, obj_class='Mug'):
     P += -P_mean
 
     H = np.eye(4)
-    H[:3,:3] = rot
-    mesh.apply_transform(H)
-    mesh.apply_scale(8.)
-    
-    H = np.eye(4)
     H[:3,-1] = -P_mean
-    mesh.apply_transform(H)
+
     translational_shift = copy.deepcopy(H)
 
-    return P, mesh, translational_shift, rot_quat
+    return P, translational_shift, rot_quat
 
 
 
@@ -137,7 +136,7 @@ if __name__ == '__main__':
     device = args.device
 
     ## Set Model and Sample Generator ##
-    P, mesh, trans, rot_quad = sample_pointcloud(obj_id, obj_class)
+    P, trans, rot_quad = sample_pointcloud(args, obj_id, obj_class)
     generator, model = get_approximated_grasp_diffusion_field(P, args, device)
 
     H = generator.sample()
@@ -153,7 +152,6 @@ if __name__ == '__main__':
 
     vis_H = H.squeeze()
     P *=1/8
-    mesh = mesh.apply_scale(1/8)
     scene = grasp_visualization.visualize_grasps(to_numpy(H), p_cloud=P, mesh=None, show=args.show)
 
 
@@ -168,7 +166,7 @@ if __name__ == '__main__':
     import pickle
     file_name = 'save_all_' + pc_path + '.npy'
     save_dir = os.path.join(args.save_dir, file_name)
-    results = {'H': to_numpy(H), 'P': P, 'mesh': mesh, 'trans': trans}
+    results = {'H': to_numpy(H), 'P': P, 'trans': trans}
     with open(save_dir, 'wb') as f:
         pickle.dump(results, f)
 
