@@ -17,3 +17,13 @@ scene_mug_pc
 
 
 python vis_single.py
+
+
+
+
+python scripts/sample/real_sample_test.py --n_grasps 10 --obj_id 1 --obj_class 'Mug' --model 'grasp_dif_multi' --pc_path '/home/crslab/kelvin/hc_pc/test_fork_handle_pc.npy' --save_dir '/home/crslab/kelvin/hc_pc/' --show  --cond "[0 , 1, 0.4]" --inpaint 
+
+
+
+
+python scripts/sample/real_sample_test.py --n_grasps 10 --obj_id 1 --obj_class 'Mug' --model 'grasp_dif_mugs' --pc_path '/home/crslab/kelvin/hc_pc/test_bottle_pc.npy' --save_dir '/home/crslab/kelvin/hc_pc/' --show  --cond "[0 , 0, 1]" --inpaint 

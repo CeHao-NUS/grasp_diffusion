@@ -73,7 +73,7 @@ def sample_pointcloud(obj_id=0, obj_class='Mug'):
     file_path = args.pc_path
     P = np.load(file_path)
 
-    random_indices = np.random.choice(P.shape[0], 3000, replace=False)
+    random_indices = np.random.choice(P.shape[0], 5000, replace=False)
     P = P[random_indices, :3]
 
     sampled_rot = scipy.spatial.transform.Rotation.random()
@@ -183,7 +183,7 @@ if __name__ == '__main__':
     for i in range(len(H_grasp)):
         H_i = H_grasp[i]
         dist_trans = torch.matmul(H_i[:3, :3], dist)
-        trans_grasps[i, :3, -1] += dist
+        # trans_grasps[i, :3, -1] += dist
 
     np.save(save_dir, to_numpy(trans_grasps)) # use unnormalized
 
