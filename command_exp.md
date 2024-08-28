@@ -15,8 +15,8 @@ python scripts/sample/generate_pointcloud_6d_grasp_poses.py --n_grasps 10 --obj_
 
 
 ## inpainting
-python scripts/sample/generate_pointcloud_6d_grasp_poses.py --n_grasps 10 --obj_id 1 --obj_class 'Mug' --model 'grasp_dif_mugs' \
---idx 3
+python scripts/sample/generate_pointcloud_6d_grasp_poses.py --n_grasps 4 --obj_id 1 --obj_class 'Mug' --model 'grasp_dif_mugs' \
+--idx 1
 
 ## goal
 python scripts/sample/generate_pointcloud_6d_grasp_poses.py --n_grasps 10 --obj_id 1 --obj_class 'Mug' --model 'grasp_mug_cond' \
@@ -26,7 +26,7 @@ python scripts/sample/generate_pointcloud_6d_grasp_poses.py --n_grasps 10 --obj_
 # =================##  bottle
 
 ## uncon
-python scripts/sample/generate_pointcloud_6d_grasp_poses.py --n_grasps 10 --obj_id 3 --obj_class 'Bottle' --model 'grasp_bottle' \
+python scripts/sample/generate_pointcloud_6d_grasp_poses.py --n_grasps 4 --obj_id 3 --obj_class 'Bottle' --model 'grasp_bottle' \
 --idx 0
 
 ## vanilla
@@ -46,8 +46,8 @@ python scripts/sample/generate_pointcloud_6d_grasp_poses.py --n_grasps 4 --obj_i
 python scripts/sample/generate_pointcloud_6d_grasp_poses.py --n_grasps 20 --obj_id 1 --obj_class 'Hammer' --model 'grasp_hammer'
 [] This only grasp handle
 
-python scripts/sample/generate_pointcloud_6d_grasp_poses.py --n_grasps 10 --obj_id 1 --obj_class 'Hammer' --model 'grasp_dif_multi' \
---idx 0
+python scripts/sample/generate_pointcloud_6d_grasp_poses.py --n_grasps 4 --obj_id 1 --obj_class 'Hammer' --model 'grasp_dif_multi' \
+--idx 1
 
 ## vanilla
 
@@ -64,8 +64,8 @@ python scripts/sample/generate_pointcloud_6d_grasp_poses.py --n_grasps 4 --obj_i
 # =================##  fork
 
 ## uncon
-python scripts/sample/generate_pointcloud_6d_grasp_poses.py --n_grasps 10 --obj_id 5 --obj_class 'Fork' --model 'grasp_fork' \
---idx 0
+python scripts/sample/generate_pointcloud_6d_grasp_poses.py --n_grasps 4 --obj_id 5 --obj_class 'Fork' --model 'grasp_fork' \
+--idx 1
 
 python scripts/sample/generate_pointcloud_6d_grasp_poses.py --n_grasps 10 --obj_id 5 --obj_class 'Fork' --model 'grasp_dif_multi'
 

@@ -146,6 +146,16 @@ def visualize_grasps(Hs, scale=1., p_cloud=None, energies=None, colors=None, mes
     else:
         return scene
 
+def vis_point_cloud(p_cloud, scale=1., color=[255,0,0,255], show=True):
+    p_cloud_tri = trimesh.points.PointCloud(p_cloud*scale, colors=[color for _ in range(p_cloud.shape[0])])
+    scene = trimesh.Scene([p_cloud_tri])
+
+    if show:
+        scene.show()
+        return scene
+    else:
+        return scene
+    
 
 def generate_mesh_grid(xmin=[-1.,-1.,-1.], xmax = [1., 1.,1.], n_points=20):
     x = torch.linspace(xmin[0], xmax[0], n_points)

@@ -34,7 +34,7 @@ if __name__ == '__main__':
 
     from vis import trans
 
-    scene.camera_transform = trans
+    # scene.camera_transform = trans
 
     scene.show()
 

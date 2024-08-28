@@ -174,8 +174,14 @@ class Grasp_AnnealedLD():
         Ht = H0
         if save_path:
             trj_H = Ht[None,...]
+
+        import time
+        ts = 0
         for t in range(self.T):
             Ht = self._step(Ht, t, noise_off=self.deterministic)
+            
+            start = time.time()
+    
 
             # apply inpainting
             if inpaint and ENABLE_INPAINT:
@@ -184,7 +190,10 @@ class Grasp_AnnealedLD():
                     if METHOD == 'vanilla':
                         Ht = vanilla_inpatint(Ht, chosen_pose)
                     elif METHOD == 'opt':
+                        
                         Ht = inpaint_opt(Ht, chosen_pose, threshold = 3e-3)
+            end = time.time()
+            ts += end - start
 
             if save_path:
                 trj_H = torch.cat((trj_H, Ht[None,:]), 0)
@@ -202,6 +211,8 @@ class Grasp_AnnealedLD():
 
             if save_path:
                 trj_H = torch.cat((trj_H, Ht[None,:]), 0)
+
+        print(f"Time spent on inpainting: {ts}")
 
         if save_path:
             return Ht, trj_H

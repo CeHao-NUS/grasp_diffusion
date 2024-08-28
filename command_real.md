@@ -1,9 +1,15 @@
 
 
-python scripts/sample/real_sample_test.py --n_grasps 10 --obj_id 1 --obj_class 'Mug' --model 'grasp_dif_multi' \
---pc_path '../scene_data/scene_bottle_pc.npy' --save_dir '../temp_save/' --show \
- --cond "[0. , 1., 0.]" --inpaint 
+python scripts/sample/real_sample_test.py --n_grasps 1 --obj_id 1 --obj_class 'Mug' --model 'grasp_dif_multi' \
+--pc_path '../scene_data/scene_mug_pc.npy' --save_dir '../temp_save/' --show \
+ --cond "[0. , 0., 1.]" --inpaint 
 
+python scripts/sample/vis_real_point_cloud.py --obj_id 10 --obj_class 'Mug' --model 'grasp_dif_multi' \
+--pc_path '../scene_data/scene_mug_pc.npy' --save_dir '../temp_save/' --show 
+
+scene_everything_pc
+save_all_scene_everything_pc
+save_grasp_scene_everything_pc
 
 scene_bottle_pc
 scene_bowl_pc
@@ -28,15 +34,15 @@ python scripts/sample/real_sample_test.py --n_grasps 10 --obj_id 1 --obj_class '
 ## inpainting opt is our method
 
 python scripts/sample/real_sample_test.py --n_grasps 10  --model 'grasp_dif_multi' \
---pc_path '../scene_data/scene_bottle_pc.npy' --save_dir '../temp_save/' --show --method 'opt'\
- --cond "[0. , 2., 0.]" --inpaint 
+--pc_path '../scene_data/scene_hammer_pc.npy' --save_dir '../temp_save/' --show --method 'opt'\
+ --cond "[0. , 1., 2.]" --inpaint 
 
 
 ## inpainting vanilla is our baseline
 
 python scripts/sample/real_sample_test.py --n_grasps 10  --model 'grasp_dif_multi' \
---pc_path '../scene_data/scene_bottle_pc.npy' --save_dir '../temp_save/' --show --method 'vanilla'\
- --cond "[0. , 2., 0.]" --inpaint 
+--pc_path '../scene_data/scene_hammer_pc.npy' --save_dir '../temp_save/' --show --method 'vanilla'\
+ --cond "[0. , 2., 2.]" --inpaint 
 
 
 # ============== goal condition
